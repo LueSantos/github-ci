@@ -1,0 +1,69 @@
+{
+	"id": "713bc0e8-5cb1-4c94-972b-86074fb976f5",
+	"name": "Severest",
+	"values": [
+		{
+			"key": "url",
+			"value": "https://serverest.dev",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "FullName",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Email",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Password",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Mensagem_de_Sucesso",
+			"value": "Cadastro realizado com sucesso",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Mensagem_de_falha",
+			"value": "Este email já está sendo usado",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Login_de_Sucesso",
+			"value": "Login realizado com sucesso",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Senha",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Id_usuario",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-09-01T22:16:46.027Z",
+	"_postman_exported_using": "Postman/10.17.4"
+}

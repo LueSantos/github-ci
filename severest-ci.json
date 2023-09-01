@@ -1,0 +1,746 @@
+{
+	"info": {
+		"_postman_id": "e4e9d9ba-110b-4882-9087-f0575775ec10",
+		"name": "SeverEst",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27634229"
+	},
+	"item": [
+		{
+			"name": "Usuários_Validação_de_Sucesso",
+			"item": [
+				{
+					"name": "Consulta_ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios/{{Id_usuario}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios",
+								"{{Id_usuario}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de usuarios",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"fullName = () =>{",
+									"",
+									"let fullName = [",
+									"",
+									"    \"Thales S. Rossi\",",
+									"    \"Juliana Ramos Lima\",",
+									"    \"Nicolas Rocha Santos\",",
+									"    \"Thales da Paz Black\",",
+									"    \"Marcela da Paz Perreira\",",
+									"    \"Heitor D. Silva\",",
+									"    \"Marcos Rocha Nunes\",",
+									"    \"Sarah Rocha Jister\",",
+									"    \"Daniela Pires da Cunha\",",
+									"    \"Theo da Costa\",",
+									"    \"Felipe Bastos da Correia\",",
+									"    \"Guilherme Nunes Silveira\",",
+									"    \"Pedro Rocha de Rezende\",",
+									"    \"Emanuelly Correia Alves\",",
+									"    \"Pietro Melo Fagundes\",",
+									"    \"Milena Oliveira Xavier\",",
+									"    \"Maria Viana Luppi\",",
+									"    \"Vitor Costela Franco\",",
+									"    \"Luiz Conceição Morreira\",",
+									"    \"Thiago Carvalho dos Santos\"",
+									"]",
+									"",
+									"let randomName = fullName[Math.floor(Math.random() * fullName.length)]",
+									"",
+									"return randomName;",
+									"}",
+									"pm.environment.set(\"FullName\", fullName())",
+									"",
+									"",
+									"pm.environment.set(\"Email\",pm.variables.replaceIn('{{$randomEmail}}').toLowerCase());",
+									"",
+									"pm.environment.set(\"Senha\",pm.variables.replaceIn('{{$randomPassword}}'));",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
+									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
+									"",
+									"//Validação de status",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"//Validação de comparação de mensagem de retorno",
+									"",
+									"pm.test(\"Cadastro de Usuário\", function () {",
+									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"});",
+									"",
+									"//Validação se o ID do usuário retornado é existente",
+									"",
+									"        pm.test(\"ID is TRUE\", function () {",
+									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"});",
+									"",
+									"//Salvando o último ID criado para consulta por _id",
+									"",
+									"pm.environment.set(\"Id_usuario\",pm.variables.replaceIn(JSON.parse(responseBody)._id))",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "891fcbae-f2ba-48aa-bdc2-8f216f2e0d93",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{FullName}}\",\n    \"email\": \"{{Email}}\",\n    \"password\": \"{{Senha}}\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login_Validação_de_Sucesso",
+			"item": [
+				{
+					"name": "Login de Sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"Token\", pm.variables.replaceIn(JSON.parse(responseBody).authorization));",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Usuário logado com Sucesso\",function(){",
+									" pm.expect(pm.variables.get(\"Login_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{Email}}\",\n    \"password\": \"{{Senha}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Falsos-Positivo",
+			"item": [
+				{
+					"name": "Login inválido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"\",\n    \"password\": \"{{Senha}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nome inválido",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"fullName = () =>{",
+									"",
+									"let fullName = [",
+									"",
+									"    \"Thales S. Rossi\",",
+									"    \"Juliana Ramos Lima\",",
+									"    \"Nicolas Rocha Santos\",",
+									"    \"Thales da Paz Black\",",
+									"    \"Marcela da Paz Perreira\",",
+									"    \"Heitor D. Silva\",",
+									"    \"Marcos Rocha Nunes\",",
+									"    \"Sarah Rocha Jister\",",
+									"    \"Daniela Pires da Cunha\",",
+									"    \"Theo da Costa\",",
+									"    \"Felipe Bastos da Correia\",",
+									"    \"Guilherme Nunes Silveira\",",
+									"    \"Pedro Rocha de Rezende\",",
+									"    \"Emanuelly Correia Alves\",",
+									"    \"Pietro Melo Fagundes\",",
+									"    \"Milena Oliveira Xavier\",",
+									"    \"Maria Viana Luppi\",",
+									"    \"Vitor Costela Franco\",",
+									"    \"Luiz Conceição Morreira\",",
+									"    \"Thiago Carvalho dos Santos\"",
+									"]",
+									"",
+									"let randomName = fullName[Math.floor(Math.random() * fullName.length)]",
+									"",
+									"return randomName;",
+									"}",
+									"pm.environment.set(\"FullName\", fullName())",
+									"",
+									"",
+									"pm.environment.set(\"Email\",pm.variables.replaceIn('{{$randomEmail}}').toLowerCase());",
+									"",
+									"pm.environment.set(\"Senha\",pm.variables.replaceIn('{{$randomPassword}}'));",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
+									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
+									"",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Cadastro de Usuário\", function () {",
+									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"});",
+									"        pm.test(\"ID is TRUE\", function () {",
+									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "891fcbae-f2ba-48aa-bdc2-8f216f2e0d93",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"\",\n    \"email\": \"{{Email}}\",\n    \"password\": \"{{Senha}}\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email inválido",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"fullName = () =>{",
+									"",
+									"let fullName = [",
+									"",
+									"    \"Thales S. Rossi\",",
+									"    \"Juliana Ramos Lima\",",
+									"    \"Nicolas Rocha Santos\",",
+									"    \"Thales da Paz Black\",",
+									"    \"Marcela da Paz Perreira\",",
+									"    \"Heitor D. Silva\",",
+									"    \"Marcos Rocha Nunes\",",
+									"    \"Sarah Rocha Jister\",",
+									"    \"Daniela Pires da Cunha\",",
+									"    \"Theo da Costa\",",
+									"    \"Felipe Bastos da Correia\",",
+									"    \"Guilherme Nunes Silveira\",",
+									"    \"Pedro Rocha de Rezende\",",
+									"    \"Emanuelly Correia Alves\",",
+									"    \"Pietro Melo Fagundes\",",
+									"    \"Milena Oliveira Xavier\",",
+									"    \"Maria Viana Luppi\",",
+									"    \"Vitor Costela Franco\",",
+									"    \"Luiz Conceição Morreira\",",
+									"    \"Thiago Carvalho dos Santos\"",
+									"]",
+									"",
+									"let randomName = fullName[Math.floor(Math.random() * fullName.length)]",
+									"",
+									"return randomName;",
+									"}",
+									"pm.environment.set(\"FullName\", fullName())",
+									"",
+									"",
+									"pm.environment.set(\"Email\",pm.variables.replaceIn('{{$randomEmail}}').toLowerCase());",
+									"",
+									"pm.environment.set(\"Senha\",pm.variables.replaceIn('{{$randomPassword}}'));",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
+									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
+									"",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Cadastro de Usuário\", function () {",
+									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"});",
+									"        pm.test(\"ID is TRUE\", function () {",
+									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "891fcbae-f2ba-48aa-bdc2-8f216f2e0d93",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{FullName}}\",\n    \"email\": \"\",\n    \"password\": \"{{Senha}}\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Senha inválida",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"fullName = () =>{",
+									"",
+									"let fullName = [",
+									"",
+									"    \"Thales S. Rossi\",",
+									"    \"Juliana Ramos Lima\",",
+									"    \"Nicolas Rocha Santos\",",
+									"    \"Thales da Paz Black\",",
+									"    \"Marcela da Paz Perreira\",",
+									"    \"Heitor D. Silva\",",
+									"    \"Marcos Rocha Nunes\",",
+									"    \"Sarah Rocha Jister\",",
+									"    \"Daniela Pires da Cunha\",",
+									"    \"Theo da Costa\",",
+									"    \"Felipe Bastos da Correia\",",
+									"    \"Guilherme Nunes Silveira\",",
+									"    \"Pedro Rocha de Rezende\",",
+									"    \"Emanuelly Correia Alves\",",
+									"    \"Pietro Melo Fagundes\",",
+									"    \"Milena Oliveira Xavier\",",
+									"    \"Maria Viana Luppi\",",
+									"    \"Vitor Costela Franco\",",
+									"    \"Luiz Conceição Morreira\",",
+									"    \"Thiago Carvalho dos Santos\"",
+									"]",
+									"",
+									"let randomName = fullName[Math.floor(Math.random() * fullName.length)]",
+									"",
+									"return randomName;",
+									"}",
+									"pm.environment.set(\"FullName\", fullName())",
+									"",
+									"",
+									"pm.environment.set(\"Email\",pm.variables.replaceIn('{{$randomEmail}}').toLowerCase());",
+									"",
+									"pm.environment.set(\"Senha\",pm.variables.replaceIn('{{$randomPassword}}'));",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
+									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
+									"",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Cadastro de Usuário\", function () {",
+									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"});",
+									"        pm.test(\"ID is TRUE\", function () {",
+									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "891fcbae-f2ba-48aa-bdc2-8f216f2e0d93",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{FullName}}\",\n    \"email\": \"{{Email}}\",\n    \"password\": \"\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Administrador inválido",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"fullName = () =>{",
+									"",
+									"let fullName = [",
+									"",
+									"    \"Thales S. Rossi\",",
+									"    \"Juliana Ramos Lima\",",
+									"    \"Nicolas Rocha Santos\",",
+									"    \"Thales da Paz Black\",",
+									"    \"Marcela da Paz Perreira\",",
+									"    \"Heitor D. Silva\",",
+									"    \"Marcos Rocha Nunes\",",
+									"    \"Sarah Rocha Jister\",",
+									"    \"Daniela Pires da Cunha\",",
+									"    \"Theo da Costa\",",
+									"    \"Felipe Bastos da Correia\",",
+									"    \"Guilherme Nunes Silveira\",",
+									"    \"Pedro Rocha de Rezende\",",
+									"    \"Emanuelly Correia Alves\",",
+									"    \"Pietro Melo Fagundes\",",
+									"    \"Milena Oliveira Xavier\",",
+									"    \"Maria Viana Luppi\",",
+									"    \"Vitor Costela Franco\",",
+									"    \"Luiz Conceição Morreira\",",
+									"    \"Thiago Carvalho dos Santos\"",
+									"]",
+									"",
+									"let randomName = fullName[Math.floor(Math.random() * fullName.length)]",
+									"",
+									"return randomName;",
+									"}",
+									"pm.environment.set(\"FullName\", fullName())",
+									"",
+									"",
+									"pm.environment.set(\"Email\",pm.variables.replaceIn('{{$randomEmail}}').toLowerCase());",
+									"",
+									"pm.environment.set(\"Senha\",pm.variables.replaceIn('{{$randomPassword}}'));",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
+									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
+									"",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Cadastro de Usuário\", function () {",
+									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"});",
+									"        pm.test(\"ID is TRUE\", function () {",
+									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "891fcbae-f2ba-48aa-bdc2-8f216f2e0d93",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{FullName}}\",\n    \"email\": \"\",\n    \"password\": \"{{Senha}}\",\n    \"administrador\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consulta Geral",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/usuarios",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://serverest.dev/"
+		}
+	]
+}
