@@ -10,36 +10,6 @@
 			"name": "Usuários_Validação_de_Sucesso",
 			"item": [
 				{
-					"name": "Consulta_ID",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/usuarios/{{Id_usuario}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"usuarios",
-								"{{Id_usuario}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Cadastro de usuarios",
 					"event": [
 						{
@@ -166,6 +136,36 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Consulta Geral",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -217,6 +217,36 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Consulta_ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios/{{Id_usuario}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios",
+								"{{Id_usuario}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -225,6 +255,24 @@
 			"item": [
 				{
 					"name": "Login inválido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Login inválido is true \",function(){",
+									" pm.expect(pm.variables.get(\"Login_invalido\")).to.eql(JSON.parse(responseBody).email);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -307,16 +355,15 @@
 									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
 									"",
 									"",
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
 									"});",
 									"",
-									"pm.test(\"Cadastro de Usuário\", function () {",
-									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"pm.test(\"Nome inválido is true \",function(){",
+									" pm.expect(pm.variables.get(\"Nome_invalido\")).to.eql(JSON.parse(responseBody).nome);",
 									"});",
-									"        pm.test(\"ID is TRUE\", function () {",
-									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
-									"});"
+									"     ",
+									"     "
 								],
 								"type": "text/javascript"
 							}
@@ -420,19 +467,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
-									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
-									"",
-									"",
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
 									"});",
 									"",
-									"pm.test(\"Cadastro de Usuário\", function () {",
-									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
-									"});",
-									"        pm.test(\"ID is TRUE\", function () {",
-									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"pm.test(\"Email inválido is true \",function(){",
+									" pm.expect(pm.variables.get(\"Email_invalido\")).to.eql(JSON.parse(responseBody).email);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -537,19 +577,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
-									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
-									"",
-									"",
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
 									"});",
 									"",
-									"pm.test(\"Cadastro de Usuário\", function () {",
-									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
-									"});",
-									"        pm.test(\"ID is TRUE\", function () {",
-									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
+									"pm.test(\"Senha inválida is true \",function(){",
+									" pm.expect(pm.variables.get(\"Senha_invalida\")).to.eql(JSON.parse(responseBody).password);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -654,20 +687,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// string.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");",
-									"// /[\\u0300-\\u036f]/g esse trecho de código é uma expressão regular que pega o range dos acentos: ´, ~, ^",
-									"",
-									"",
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
 									"});",
 									"",
-									"pm.test(\"Cadastro de Usuário\", function () {",
-									"        pm.expect(pm.variables.get(\"Mensagem_de_Sucesso\")).to.eql(JSON.parse(responseBody).message);",
+									"pm.test(\"Administrador status is true\",function(){",
+									" pm.expect(pm.variables.get(\"Admin_invalido\")).to.eql(JSON.parse(responseBody).administrador);",
 									"});",
-									"        pm.test(\"ID is TRUE\", function () {",
-									"        pm.expect(JSON.parse(responseBody)._id).is.exist;",
-									"});"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -698,7 +725,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"{{FullName}}\",\n    \"email\": \"\",\n    \"password\": \"{{Senha}}\",\n    \"administrador\": \"\"\n}",
+							"raw": "{\n    \"nome\": \"{{FullName}}\",\n    \"email\": \"{{Email}}\",\n    \"password\": \"{{Senha}}\",\n    \"administrador\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -718,23 +745,6 @@
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "Consulta Geral",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}/usuarios",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"usuarios"
-					]
-				}
-			},
-			"response": []
 		}
 	],
 	"variable": [
